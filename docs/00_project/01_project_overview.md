@@ -2,11 +2,7 @@
 
 ## 概要
 
-MCP Server CDK は、AWS Lambda 上で動作する MCP (Model Context Protocol) Server のサンプル実装です。AWS CDK を使用してインフラストラクチャをコードとして管理し、柔軟な認証方式をサポートしています。
-
-## AWS DevOps Agent 対応
-
-本プロジェクトは、**AWS DevOps Agent** から使用するための MCP サーバーを Lambda で構築するものです。
+本プロジェクトは、**AWS DevOps Agent** から使用するための MCP サーバーを Lambda で構築するものです。AWS CDK でインフラを管理します。
 
 以下の AWS ドキュメントに基づき、必要な仕様を満たす実装となっています：
 
@@ -17,9 +13,9 @@ MCP Server CDK は、AWS Lambda 上で動作する MCP (Model Context Protocol) 
 | 要件 | 対応状況 |
 |------|:--------:|
 | Streamable HTTP トランスポート | ✅ |
-| API キー/トークンベースの認証 | ✅ |
-| OAuth 2.0 認証 (Client Credentials Flow) | ✅ |
-| VPC 内ホスト未サポート | ✅ (VPC 設定なし) |
+| API キー/トークンベースの認証 | ✅ (スイッチで選択)|
+| OAuth 2.0 認証 (Client Credentials Flow) | ✅ (スイッチで選択)|
+| VPC 内ホスト未サポート | ✅ (VPC内ホストは、DevOps Agentで未サポート) |
 | JSON-RPC 2.0 | ✅ |
 
 ## 目的
