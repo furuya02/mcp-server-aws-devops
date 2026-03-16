@@ -1,0 +1,209 @@
+<mxfile host="app.diagrams.net" modified="2026-03-17T00:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram id="oauth-architecture" name="OAuth 2.0 Authentication">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="MCP Server Architecture - OAuth 2.0 Authentication (Client Credentials Flow)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- MCP Client -->
+        <mxCell id="client-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="client-icon" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn-icons-png.flaticon.com/512/1995/1995574.png" vertex="1" parent="1">
+          <mxGeometry x="130" y="215" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="client-label" value="MCP Client&#xa;(DevOps Agent)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="90" y="280" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Cognito -->
+        <mxCell id="cognito-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="220" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="cognito-icon" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#F54749;gradientDirection=north;fillColor=#C7131F;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cognito;" vertex="1" parent="1">
+          <mxGeometry x="400" y="95" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cognito-label" value="Amazon Cognito&#xa;User Pool" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="160" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Cognito Details -->
+        <mxCell id="cognito-detail1" value="Resource Server: mcp.invoke scope" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="335" y="190" width="190" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="cognito-detail2" value="App Client: client_credentials grant" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="335" y="205" width="190" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="cognito-detail3" value="Token Endpoint: /oauth2/token" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="335" y="220" width="190" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Client to Cognito (Step 1) -->
+        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;curved=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="200" y="200" as="sourcePoint" />
+            <mxPoint x="320" y="140" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow1-label" value="1. Token Request&#xa;(client_id + client_secret)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="180" y="120" width="130" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Cognito to Client (Step 2) -->
+        <mxCell id="arrow2" value="" style="endArrow=classic;html=1;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;curved=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="180" as="sourcePoint" />
+            <mxPoint x="200" y="230" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2-label" value="2. Access Token" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#d79b00;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="220" y="220" width="90" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Client to API Gateway (Step 3) -->
+        <mxCell id="arrow3" value="" style="endArrow=classic;html=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="260" as="sourcePoint" />
+            <mxPoint x="600" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3-label" value="3. API Request&#xa;Authorization: Bearer &lt;token&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="370" y="270" width="150" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- API Gateway -->
+        <mxCell id="apigw-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="610" y="180" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="apigw-icon" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#945DF2;gradientDirection=north;fillColor=#5A30B5;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;" vertex="1" parent="1">
+          <mxGeometry x="680" y="195" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="apigw-label" value="Amazon API Gateway&#xa;(REST API)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="630" y="260" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Cognito Authorizer Box -->
+        <mxCell id="authorizer-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="630" y="295" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="authorizer-label" value="Cognito Authorizer&#xa;(Token Validation)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="640" y="300" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: API Gateway to Cognito (Validation) -->
+        <mxCell id="arrow4" value="" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=1;fillColor=#ffe6cc;strokeColor=#d79b00;dashed=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="160" as="sourcePoint" />
+            <mxPoint x="610" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow4-label" value="4. Validate" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;fontColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="550" y="165" width="50" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: API Gateway to Lambda -->
+        <mxCell id="arrow5" value="" style="endArrow=classic;html=1;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="820" y="260" as="sourcePoint" />
+            <mxPoint x="940" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5-label" value="5. Lambda Proxy" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="840" y="230" width="90" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Lambda Function -->
+        <mxCell id="lambda-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="950" y="180" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="lambda-icon" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#F78E04;gradientDirection=north;fillColor=#D05C17;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="195" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lambda-label" value="AWS Lambda&#xa;(Python 3.12)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="980" y="260" width="140" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- MCP Handler Box -->
+        <mxCell id="mcp-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="970" y="295" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="mcp-label" value="MCPLambdaHandler&#xa;(awslabs)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="980" y="300" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Tools Section -->
+        <mxCell id="tools-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="950" y="400" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tools-label" value="MCP Tools" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1010" y="410" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tool1" value="get_schedule" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="970" y="440" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="tool2" value="..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="440" width="70" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow: Lambda to Tools -->
+        <mxCell id="arrow6" value="" style="endArrow=classic;html=1;strokeWidth=2;fillColor=#e1d5e7;strokeColor=#9673a6;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1050" y="360" as="sourcePoint" />
+            <mxPoint x="1050" y="395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="400" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="OAuth 2.0 Client Credentials Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="90" y="405" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" value="1. Client requests token with client_id + client_secret" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="90" y="425" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" value="2. Cognito returns access token (JWT)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="90" y="443" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3" value="3. Client sends API request with Bearer token" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="90" y="461" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend4" value="4. API Gateway validates token via Cognito Authorizer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="90" y="479" width="260" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend5" value="5. Lambda processes MCP request" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="90" y="497" width="260" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- Deploy Command -->
+        <mxCell id="deploy-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="400" y="430" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="deploy-label" value="Deploy Command:&#xa;cdk deploy -c authType=oauth" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="410" y="440" width="210" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Scope Info -->
+        <mxCell id="scope-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="430" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="scope-label" value="OAuth Scope:&#xa;{projectName}-api/mcp.invoke" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="660" y="440" width="210" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
