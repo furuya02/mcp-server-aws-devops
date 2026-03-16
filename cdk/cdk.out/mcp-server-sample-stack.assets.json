@@ -1,0 +1,36 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "1218959ce3825789b2d87fe1efef383c1c775552e318be9046be63ae67aa5170": {
+      "displayName": "McpFunction/Code",
+      "source": {
+        "path": "/Users/hirauchi.shinichi/Downloads/MyTools/mcp-server-aws-devops/cdk/cdk.out/asset.1218959ce3825789b2d87fe1efef383c1c775552e318be9046be63ae67aa5170",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-ap-northeast-1-5685c126": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-ap-northeast-1",
+          "objectKey": "1218959ce3825789b2d87fe1efef383c1c775552e318be9046be63ae67aa5170.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-ap-northeast-1"
+        }
+      }
+    },
+    "6742042317b6816739f4031c9daf5e2fd5f60219d461b6dc3a44d3a203734235": {
+      "displayName": "mcp-server-sample-stack Template",
+      "source": {
+        "path": "mcp-server-sample-stack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-ap-northeast-1-3f0d98a9": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-ap-northeast-1",
+          "objectKey": "6742042317b6816739f4031c9daf5e2fd5f60219d461b6dc3a44d3a203734235.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

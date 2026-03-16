@@ -1,0 +1,662 @@
+{
+ "Resources": {
+  "McpFunctionServiceRoleF37F17FC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "CmBillingGroup",
+      "Value": "cmn"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpFunction/ServiceRole/Resource"
+   }
+  },
+  "McpFunctionServiceRoleDefaultPolicy29310C43": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "xray:PutTelemetryRecords",
+        "xray:PutTraceSegments"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "McpFunctionServiceRoleDefaultPolicy29310C43",
+    "Roles": [
+     {
+      "Ref": "McpFunctionServiceRoleF37F17FC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpFunction/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "McpFunctionF370A1F8": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Architectures": [
+     "x86_64"
+    ],
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-637423290077-ap-northeast-1",
+     "S3Key": "65f7ec09a8e66083e4033447ac3f8b15fde319007f1c5328990dc2d30c9ea1f8.zip"
+    },
+    "FunctionName": "cmn-genai-mcp-server-sample-dev-mcp",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "McpFunctionServiceRoleF37F17FC",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.12",
+    "Tags": [
+     {
+      "Key": "CmBillingGroup",
+      "Value": "cmn"
+     }
+    ],
+    "Timeout": 600,
+    "TracingConfig": {
+     "Mode": "Active"
+    }
+   },
+   "DependsOn": [
+    "McpFunctionServiceRoleDefaultPolicy29310C43",
+    "McpFunctionServiceRoleF37F17FC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpFunction/Resource",
+    "aws:asset:path": "asset.65f7ec09a8e66083e4033447ac3f8b15fde319007f1c5328990dc2d30c9ea1f8",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "McpApi7472703D": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "ApiKeySourceType": "HEADER",
+    "Description": "MCP API with Streamable HTTP and API Key authentication",
+    "Name": "cmn-genai-mcp-server-sample-dev-api",
+    "Tags": [
+     {
+      "Key": "CmBillingGroup",
+      "Value": "cmn"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Resource"
+   }
+  },
+  "McpApiDeployment80948E2E043a2b35e4f26f1fd4806550f6cf0595": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "MCP API with Streamable HTTP and API Key authentication",
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    }
+   },
+   "DependsOn": [
+    "McpApimcpGETC6C13F8D",
+    "McpApimcpOPTIONS7E9AF252",
+    "McpApimcpPOSTCC0C6683",
+    "McpApimcp496C3091",
+    "McpApiOPTIONS0C579F9F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
+   }
+  },
+  "McpApiDeploymentStageprd4AC325B8": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "McpApiDeployment80948E2E043a2b35e4f26f1fd4806550f6cf0595"
+    },
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    },
+    "StageName": "prd",
+    "Tags": [
+     {
+      "Key": "CmBillingGroup",
+      "Value": "cmn"
+     }
+    ],
+    "TracingEnabled": true
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/DeploymentStage.prd/Resource"
+   }
+  },
+  "McpApiOPTIONS0C579F9F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "McpApi7472703D",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/OPTIONS/Resource"
+   }
+  },
+  "McpApimcp496C3091": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "McpApi7472703D",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "mcp",
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/Resource"
+   }
+  },
+  "McpApimcpOPTIONS7E9AF252": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "McpApimcp496C3091"
+    },
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/OPTIONS/Resource"
+   }
+  },
+  "McpApimcpPOSTApiPermissioncmngenaimcpserversamplestackMcpApi6F5ACEE3POSTmcp3721140C": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "McpFunctionF370A1F8",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-1:637423290077:",
+       {
+        "Ref": "McpApi7472703D"
+       },
+       "/",
+       {
+        "Ref": "McpApiDeploymentStageprd4AC325B8"
+       },
+       "/POST/mcp"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/POST/ApiPermission.cmngenaimcpserversamplestackMcpApi6F5ACEE3.POST..mcp"
+   }
+  },
+  "McpApimcpPOSTApiPermissionTestcmngenaimcpserversamplestackMcpApi6F5ACEE3POSTmcpC5B7BD3B": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "McpFunctionF370A1F8",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-1:637423290077:",
+       {
+        "Ref": "McpApi7472703D"
+       },
+       "/test-invoke-stage/POST/mcp"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/POST/ApiPermission.Test.cmngenaimcpserversamplestackMcpApi6F5ACEE3.POST..mcp"
+   }
+  },
+  "McpApimcpPOSTCC0C6683": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "McpFunctionF370A1F8",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "McpApimcp496C3091"
+    },
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/POST/Resource"
+   }
+  },
+  "McpApimcpGETApiPermissioncmngenaimcpserversamplestackMcpApi6F5ACEE3GETmcpC7F3DB65": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "McpFunctionF370A1F8",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-1:637423290077:",
+       {
+        "Ref": "McpApi7472703D"
+       },
+       "/",
+       {
+        "Ref": "McpApiDeploymentStageprd4AC325B8"
+       },
+       "/GET/mcp"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/GET/ApiPermission.cmngenaimcpserversamplestackMcpApi6F5ACEE3.GET..mcp"
+   }
+  },
+  "McpApimcpGETApiPermissionTestcmngenaimcpserversamplestackMcpApi6F5ACEE3GETmcpD8E2035F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "McpFunctionF370A1F8",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:ap-northeast-1:637423290077:",
+       {
+        "Ref": "McpApi7472703D"
+       },
+       "/test-invoke-stage/GET/mcp"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/GET/ApiPermission.Test.cmngenaimcpserversamplestackMcpApi6F5ACEE3.GET..mcp"
+   }
+  },
+  "McpApimcpGETC6C13F8D": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": true,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "McpFunctionF370A1F8",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "McpApimcp496C3091"
+    },
+    "RestApiId": {
+     "Ref": "McpApi7472703D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApi/Default/mcp/GET/Resource"
+   }
+  },
+  "McpApiKeyC55C40F7": {
+   "Type": "AWS::ApiGateway::ApiKey",
+   "Properties": {
+    "Description": "API Key for MCP API",
+    "Enabled": true,
+    "Name": "cmn-genai-mcp-server-sample-dev-api-key",
+    "Tags": [
+     {
+      "Key": "CmBillingGroup",
+      "Value": "cmn"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpApiKey/Resource"
+   }
+  },
+  "McpUsagePlanB200FDBD": {
+   "Type": "AWS::ApiGateway::UsagePlan",
+   "Properties": {
+    "ApiStages": [
+     {
+      "ApiId": {
+       "Ref": "McpApi7472703D"
+      },
+      "Stage": {
+       "Ref": "McpApiDeploymentStageprd4AC325B8"
+      },
+      "Throttle": {}
+     }
+    ],
+    "Description": "Usage plan for MCP API",
+    "Tags": [
+     {
+      "Key": "CmBillingGroup",
+      "Value": "cmn"
+     }
+    ],
+    "Throttle": {
+     "BurstLimit": 200,
+     "RateLimit": 100
+    },
+    "UsagePlanName": "cmn-genai-mcp-server-sample-dev-usage-plan"
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpUsagePlan/Resource"
+   }
+  },
+  "McpUsagePlanUsagePlanKeyResourcecmngenaimcpserversamplestackMcpApiKey305D9D69E408CC00": {
+   "Type": "AWS::ApiGateway::UsagePlanKey",
+   "Properties": {
+    "KeyId": {
+     "Ref": "McpApiKeyC55C40F7"
+    },
+    "KeyType": "API_KEY",
+    "UsagePlanId": {
+     "Ref": "McpUsagePlanB200FDBD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/McpUsagePlan/UsagePlanKeyResource:cmngenaimcpserversamplestackMcpApiKey305D9D69"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22PQW+DMAyFf0vvadbBDrvSTbtU0xDVzpUbPOYSEoSdIYT471MCk3rY6X32s57tTGf5sz7sYOS9qdu9pauezwKmVTDyZbbQXWvQ81twRsg79fLl7rnEoSNm8m5RBJ2eK28xGklLb8lMaS7Roji/ADMK6yKK4lwfg2lRjsCooKcGBEeY9FwhS9FTytrwFXvrpw6dxO5ddRZo0tYVKmQfBoMp8x3l29fR3OjP3ZJXLno6Ybp0o0+GBksL6cv/ixNOy6LSH3EvuSbaH0H6IItyvkZ944efLNOPT/qwuzHRfghOqENdrfoL9D/NjH8BAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "cmn-genai-mcp-server-sample-stack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "McpApiEndpoint725598DE": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "McpApi7472703D"
+      },
+      ".execute-api.ap-northeast-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "McpApiDeploymentStageprd4AC325B8"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "McpFunctionArn": {
+   "Description": "MCP Lambda Function ARN",
+   "Value": {
+    "Fn::GetAtt": [
+     "McpFunctionF370A1F8",
+     "Arn"
+    ]
+   }
+  },
+  "McpApiUrl": {
+   "Description": "MCP API URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "McpApi7472703D"
+      },
+      ".execute-api.ap-northeast-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "McpApiDeploymentStageprd4AC325B8"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "McpApiEndpoint": {
+   "Description": "MCP API Endpoint",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "McpApi7472703D"
+      },
+      ".execute-api.ap-northeast-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "McpApiDeploymentStageprd4AC325B8"
+      },
+      "/mcp"
+     ]
+    ]
+   }
+  },
+  "ApiKeyId": {
+   "Description": "API Key ID (use AWS CLI to get the actual key value)",
+   "Value": {
+    "Ref": "McpApiKeyC55C40F7"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
