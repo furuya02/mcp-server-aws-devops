@@ -1,0 +1,36 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "65f7ec09a8e66083e4033447ac3f8b15fde319007f1c5328990dc2d30c9ea1f8": {
+      "displayName": "McpFunction/Code",
+      "source": {
+        "path": "asset.65f7ec09a8e66083e4033447ac3f8b15fde319007f1c5328990dc2d30c9ea1f8",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "637423290077-ap-northeast-1-0c3f1e12": {
+          "bucketName": "cdk-hnb659fds-assets-637423290077-ap-northeast-1",
+          "objectKey": "65f7ec09a8e66083e4033447ac3f8b15fde319007f1c5328990dc2d30c9ea1f8.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::637423290077:role/cdk-hnb659fds-file-publishing-role-637423290077-ap-northeast-1"
+        }
+      }
+    },
+    "bdf3d2e73282cba0545861fc7fc4ee01df012e1e922b6490f0ce273c099809be": {
+      "displayName": "cmn-genai-mcp-server-sample-stack Template",
+      "source": {
+        "path": "cmn-genai-mcp-server-sample-stack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "637423290077-ap-northeast-1-e3b3118c": {
+          "bucketName": "cdk-hnb659fds-assets-637423290077-ap-northeast-1",
+          "objectKey": "bdf3d2e73282cba0545861fc7fc4ee01df012e1e922b6490f0ce273c099809be.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::637423290077:role/cdk-hnb659fds-file-publishing-role-637423290077-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
