@@ -1,133 +1,132 @@
 # MCP Server CDK
 
-本プロジェクトは、**AWS DevOps Agent** から使用するための MCP サーバーを Lambda で構築するものです。AWS CDK でインフラを管理します。
+This project builds an MCP server on Lambda for use with **AWS DevOps Agent**. Infrastructure is managed with AWS CDK.
 
-以下の AWS ドキュメントに基づき、必要な仕様を満たす実装となっています：
+The implementation meets the required specifications based on the following AWS documentation:
 
 - [Configuring capabilities for AWS DevOps Agent: Connecting MCP servers](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-capabilities-for-aws-devops-agent-connecting-mcp-servers.html)
 
-### 対応仕様
+### Supported Specifications
 
-| 要件 | 対応状況 |
-|------|:--------:|
-| Streamable HTTP トランスポート | ✅ |
-| API キー/トークンベースの認証 | ✅ (スイッチで選択)|
-| OAuth 2.0 認証 (Client Credentials Flow) | ✅ (スイッチで選択)|
-| VPC 内ホスト未サポート | ✅ (VPC内ホストは、DevOps Agentで未サポート) |
+| Requirement | Status |
+|-------------|:------:|
+| Streamable HTTP Transport | ✅ |
+| API Key/Token-based Authentication | ✅ (Switchable) |
+| OAuth 2.0 Authentication (Client Credentials Flow) | ✅ (Switchable) |
+| VPC-hosted Endpoints Not Supported | ✅ (VPC-hosted endpoints are not supported by DevOps Agent) |
 | JSON-RPC 2.0 | ✅ |
 
-### サンプル実装について
+### About the Sample Implementation
 
-本プロジェクトはサンプル実装のため、**最小限の Tool のみ**を提供しています。
+This project is a sample implementation and provides **only minimal tools**.
 
-| ツール名 | 説明 |
-|---------|------|
-| `get_schedule` | サービス運用のスケジュールを取得 |
+| Tool Name | Description |
+|-----------|-------------|
+| `get_schedule` | Get service operations schedule |
 
-実際のプロジェクトでは、`cdk/lambda_python/index.py` に Tool を追加して拡張してください。
+For actual projects, extend by adding tools to `cdk/lambda_python/index.py`.
 
-## アーキテクチャ
+## Architecture
 
-2種類の認証方式をサポートしています。
+Two authentication methods are supported.
 
-### API Key 認証（デフォルト）
-
+### API Key Authentication (Default)
 
 ![](assets/architecture-api-key.png)
 
-### OAuth 2.0 認証（Client Credentials Flow）
+### OAuth 2.0 Authentication (Client Credentials Flow)
 
 ![](assets/architecture-oauth.png)
 
-## サーバー情報
+## Server Information
 
-| 項目 | 値 |
-|------|-----|
-| サーバー名 | `service-operations-mcp` |
-| バージョン | `1.0.0` |
-| プロトコル | Streamable HTTP |
+| Item | Value |
+|------|-------|
+| Server Name | `service-operations-mcp` |
+| Version | `1.0.0` |
+| Protocol | Streamable HTTP |
 
-## 提供ツール
+## Provided Tools
 
-| ツール名 | 説明 | 引数 | 戻り値 |
-|---------|------|------|--------|
-| `get_schedule` | サービス運用のスケジュールを取得 | なし | JSON |
+| Tool Name | Description | Arguments | Return Value |
+|-----------|-------------|-----------|--------------|
+| `get_schedule` | Get service operations schedule | None | JSON |
 
-## 構成
+## Structure
 
 ```
 mcp-server-aws-devops/
 ├── assets/
-│   ├── architecture-api-key.drawio  # API Key認証構成図
-│   └── architecture-oauth.drawio    # OAuth認証構成図
-├── cdk/                             # CDKプロジェクト
+│   ├── architecture-api-key.drawio  # API Key auth architecture diagram
+│   └── architecture-oauth.drawio    # OAuth auth architecture diagram
+├── cdk/                             # CDK project
 └── README.md
 ```
 
-### CDK ディレクトリ
+### CDK Directory
 
 ```
 cdk/
 ├── bin/
-│   └── cdk.ts              # CDKエントリーポイント
+│   └── cdk.ts              # CDK entry point
 ├── lib/
-│   └── mcp-stack.ts        # メインスタック（認証切り替え対応）
+│   └── mcp-stack.ts        # Main stack (with auth switching support)
 ├── lambda_python/
-│   ├── index.py            # Lambda関数実装 (Python)
-│   └── requirements.txt    # Python依存関係
-├── cdk.json                # CDK設定（authType設定含む）
-├── package.json            # 依存関係
-└── tsconfig.json           # TypeScript設定
+│   ├── index.py            # Lambda function implementation (Python)
+│   └── requirements.txt    # Python dependencies
+├── cdk.json                # CDK configuration (includes authType setting)
+├── package.json            # Dependencies
+└── tsconfig.json           # TypeScript configuration
 ```
 
-## 認証方式
+## Authentication Methods
 
-### 認証タイプの切り替え
+### Switching Authentication Type
 
-`cdk.json` の `context.authType` または デプロイ時の `-c authType=` オプションで切り替えます。
+Switch using `context.authType` in `cdk.json` or the `-c authType=` option during deployment.
 
-| authType | 説明 | 認証方法 |
-|----------|------|----------|
-| `api-key` (デフォルト) | API Key認証 | `x-api-key` ヘッダー |
-| `oauth` | OAuth 2.0 (Client Credentials) | `Authorization: Bearer <token>` ヘッダー |
+| authType | Description | Authentication Method |
+|----------|-------------|----------------------|
+| `api-key` (Default) | API Key Authentication | `x-api-key` header |
+| `oauth` | OAuth 2.0 (Client Credentials) | `Authorization: Bearer <token>` header |
 
-### API Key 認証で作成されるリソース
+### Resources Created with API Key Authentication
 
-| リソース | 説明 |
-|---------|------|
-| Lambda関数 | MCP Server (Python 3.12) |
-| API Gateway | REST API (APIキー認証) |
-| API Key | APIキー認証用 |
-| Usage Plan | スロットリング設定（rate: 100, burst: 200） |
+| Resource | Description |
+|----------|-------------|
+| Lambda Function | MCP Server (Python 3.12) |
+| API Gateway | REST API (API Key Authentication) |
+| API Key | For API Key authentication |
+| Usage Plan | Throttling settings (rate: 100, burst: 200) |
 
-### OAuth 認証で作成されるリソース
+### Resources Created with OAuth Authentication
 
-| リソース | 説明 |
-|---------|------|
-| Lambda関数 | MCP Server (Python 3.12) |
+| Resource | Description |
+|----------|-------------|
+| Lambda Function | MCP Server (Python 3.12) |
 | API Gateway | REST API (Cognito Authorizer) |
 | Cognito User Pool | OAuth 2.0 IdP |
-| Cognito Domain | トークンエンドポイント用 |
-| Resource Server | スコープ定義 (`mcp.invoke`) |
-| App Client | Client Credentials Flow 用 |
+| Cognito Domain | For token endpoint |
+| Resource Server | Scope definition (`mcp.invoke`) |
+| App Client | For Client Credentials Flow |
 
-## awslabs.mcp_lambda_handler について
+## About awslabs.mcp_lambda_handler
 
-`awslabs.mcp_lambda_handler` は、AWS Labs が提供する Python ライブラリで、AWS Lambda 上で MCP サーバーを構築するためのフレームワークです。
+`awslabs.mcp_lambda_handler` is a Python library provided by AWS Labs, a framework for building MCP servers on AWS Lambda.
 
 - **PyPI**: [awslabs.mcp-lambda-handler](https://pypi.org/project/awslabs.mcp-lambda-handler/)
 - **GitHub**: [awslabs/mcp](https://github.com/awslabs/mcp)
 
-### 主な機能
+### Key Features
 
-| 機能 | 説明 |
-|------|------|
-| Streamable HTTP | MCP仕様の Streamable HTTP トランスポートをサポート |
-| ツール定義 | `@mcp.tool()` デコレータで簡単にツールを定義 |
-| セッション管理 | DynamoDB を使用したセッション状態の永続化（オプション） |
-| 型検証 | 関数の引数・戻り値の型を自動検証 |
+| Feature | Description |
+|---------|-------------|
+| Streamable HTTP | Supports MCP specification Streamable HTTP transport |
+| Tool Definition | Easily define tools with `@mcp.tool()` decorator |
+| Session Management | Optional session state persistence using DynamoDB |
+| Type Validation | Automatic validation of function arguments and return values |
 
-### 基本的な使い方
+### Basic Usage
 
 ```python
 from awslabs.mcp_lambda_handler import MCPLambdaHandler
@@ -139,33 +138,33 @@ mcp = MCPLambdaHandler(
 
 @mcp.tool()
 def my_tool(param1: str, param2: int = 10) -> str:
-    """ツールの説明"""
+    """Tool description"""
     return f"Result: {param1}, {param2}"
 
 def handler(event, context):
     return mcp.handle_request(event, context)
 ```
 
-### サポートするMCPメソッド
+### Supported MCP Methods
 
-| メソッド | 説明 |
-|---------|------|
-| `initialize` | クライアント接続の初期化 |
-| `tools/list` | 登録されたツール一覧を返す |
-| `tools/call` | 指定されたツールを実行 |
-| `ping` | ヘルスチェック |
+| Method | Description |
+|--------|-------------|
+| `initialize` | Initialize client connection |
+| `tools/list` | Return list of registered tools |
+| `tools/call` | Execute specified tool |
+| `ping` | Health check |
 
-## セットアップ
+## Setup
 
-### 前提条件
+### Prerequisites
 
 - Node.js 18+
-- Docker（Lambda関数のバンドリングに必要）
-- AWS CLI（設定済み）
+- Docker (required for Lambda function bundling)
+- AWS CLI (configured)
 
-### デプロイ
+### Deployment
 
-#### API Key 認証（デフォルト）
+#### API Key Authentication (Default)
 
 ```bash
 cd cdk
@@ -173,7 +172,7 @@ npm install
 npx cdk deploy
 ```
 
-#### OAuth 認証
+#### OAuth Authentication
 
 ```bash
 cd cdk
@@ -181,49 +180,49 @@ npm install
 npx cdk deploy -c authType=oauth
 ```
 
-#### カスタムプロジェクト名を指定
+#### Specify Custom Project Name
 
 ```bash
 npx cdk deploy -c projectName=my-mcp-server
 npx cdk deploy -c projectName=my-mcp-server -c authType=oauth
 ```
 
-## 出力値
+## Output Values
 
-### 共通出力
+### Common Outputs
 
-| 出力名 | 説明 |
-|-------|------|
-| `McpFunctionArn` | Lambda関数のARN |
-| `McpApiUrl` | API GatewayのベースURL |
-| `McpApiEndpoint` | MCPエンドポイント (`{ApiUrl}/mcp`) |
-| `AuthType` | 使用中の認証タイプ |
+| Output Name | Description |
+|-------------|-------------|
+| `McpFunctionArn` | Lambda function ARN |
+| `McpApiUrl` | API Gateway base URL |
+| `McpApiEndpoint` | MCP endpoint (`{ApiUrl}/mcp`) |
+| `AuthType` | Authentication type in use |
 
-### API Key 認証時の追加出力
+### Additional Outputs for API Key Authentication
 
-| 出力名 | 説明 |
-|-------|------|
-| `ApiKeyId` | APIキーID |
-| `GetApiKeyCommand` | APIキー値取得コマンド |
+| Output Name | Description |
+|-------------|-------------|
+| `ApiKeyId` | API Key ID |
+| `GetApiKeyCommand` | Command to retrieve API Key value |
 
-### OAuth 認証時の追加出力
+### Additional Outputs for OAuth Authentication
 
-| 出力名 | 説明 |
-|-------|------|
+| Output Name | Description |
+|-------------|-------------|
 | `UserPoolId` | Cognito User Pool ID |
 | `AppClientId` | Cognito App Client ID |
 | `TokenEndpoint` | OAuth 2.0 Token Endpoint URL |
-| `OAuthScope` | 使用するスコープ |
-| `GetClientSecretCommand` | Client Secret 取得コマンド |
+| `OAuthScope` | Scope to use |
+| `GetClientSecretCommand` | Command to retrieve Client Secret |
 
-## デプロイ後の作業
+## Post-Deployment Tasks
 
-### API Key 認証の場合
+### For API Key Authentication
 
-#### APIキーの取得
+#### Retrieve API Key
 
 ```bash
-# 出力されたコマンドを実行、または以下を実行
+# Execute the output command, or run the following
 aws apigateway get-api-key \
   --api-key <ApiKeyId> \
   --include-value \
@@ -231,12 +230,12 @@ aws apigateway get-api-key \
   --output text
 ```
 
-### OAuth 認証の場合
+### For OAuth Authentication
 
-#### Client Secret の取得
+#### Retrieve Client Secret
 
 ```bash
-# 出力された GetClientSecretCommand を実行
+# Execute the output GetClientSecretCommand
 aws cognito-idp describe-user-pool-client \
   --user-pool-id <UserPoolId> \
   --client-id <AppClientId> \
@@ -244,17 +243,17 @@ aws cognito-idp describe-user-pool-client \
   --output text
 ```
 
-#### アクセストークンの取得
+#### Obtain Access Token
 
 ```bash
-# Client Credentials Flow でトークンを取得
+# Obtain token using Client Credentials Flow
 curl -X POST "<TokenEndpoint>" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -u "<AppClientId>:<ClientSecret>" \
   -d "grant_type=client_credentials&scope=<OAuthScope>"
 ```
 
-レスポンス例:
+Response example:
 ```json
 {
   "access_token": "eyJraWQiOi...",
@@ -263,11 +262,11 @@ curl -X POST "<TokenEndpoint>" \
 }
 ```
 
-## 動作確認
+## Verification
 
-### API Key 認証の場合
+### For API Key Authentication
 
-#### MCP Inspector での確認
+#### Verification with MCP Inspector
 
 ```bash
 npx @modelcontextprotocol/inspector \
@@ -276,7 +275,7 @@ npx @modelcontextprotocol/inspector \
   --header "x-api-key: <API_KEY>"
 ```
 
-#### tools/list の呼び出し
+#### Calling tools/list
 
 ```bash
 curl -X POST "<McpApiEndpoint>" \
@@ -289,7 +288,7 @@ curl -X POST "<McpApiEndpoint>" \
   }'
 ```
 
-#### get_schedule ツールの呼び出し
+#### Calling get_schedule Tool
 
 ```bash
 curl -X POST "<McpApiEndpoint>" \
@@ -306,19 +305,19 @@ curl -X POST "<McpApiEndpoint>" \
   }'
 ```
 
-### OAuth 認証の場合
+### For OAuth Authentication
 
-#### tools/list の呼び出し
+#### Calling tools/list
 
 ```bash
-# まずアクセストークンを取得
+# First obtain access token
 ACCESS_TOKEN=$(curl -s -X POST "<TokenEndpoint>" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -u "<AppClientId>:<ClientSecret>" \
   -d "grant_type=client_credentials&scope=<OAuthScope>" \
   | jq -r '.access_token')
 
-# Bearer トークンで API を呼び出し
+# Call API with Bearer token
 curl -X POST "<McpApiEndpoint>" \
   -H "Authorization: Bearer $ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
@@ -329,7 +328,7 @@ curl -X POST "<McpApiEndpoint>" \
   }'
 ```
 
-#### get_schedule ツールの呼び出し
+#### Calling get_schedule Tool
 
 ```bash
 curl -X POST "<McpApiEndpoint>" \
@@ -346,65 +345,64 @@ curl -X POST "<McpApiEndpoint>" \
   }'
 ```
 
-## MCP仕様への適合
+## MCP Specification Compliance
 
-| 仕様 | 対応状況 |
-|------|:--------:|
+| Specification | Status |
+|---------------|:------:|
 | Streamable HTTP | ✅ |
-| APIキー/トークンベースの認証 | ✅ |
-| OAuth 2.0 認証 | ✅ |
+| API Key/Token-based Authentication | ✅ |
+| OAuth 2.0 Authentication | ✅ |
 | JSON-RPC 2.0 | ✅ |
 
-## 注意事項
+## Notes
 
-### 認証情報の管理
+### Credential Management
 
-APIキーおよびOAuthクレデンシャルは機密情報です。以下の点に注意してください：
+API keys and OAuth credentials are sensitive information. Please note the following:
 
-- コードやログに認証情報を含めない
-- AWS Secrets Manager などで安全に管理する
-- 必要に応じてキーをローテーションする
+- Do not include credentials in code or logs
+- Manage securely using AWS Secrets Manager or similar
+- Rotate keys as needed
 
-### Docker 要件
+### Docker Requirement
 
-CDK デプロイ時に Python 依存関係をバンドルするため、Docker が必要です。
+Docker is required to bundle Python dependencies during CDK deployment.
 
-### OAuth 認証の注意点
+### OAuth Authentication Notes
 
-- アクセストークンの有効期限はデフォルト1時間
-- トークン更新時は再度 Client Credentials Flow を実行
-- スコープは `{projectName}-api/mcp.invoke` 形式
+- Access token expires in 1 hour by default
+- Re-execute Client Credentials Flow to refresh tokens
+- Scope format is `{projectName}-api/mcp.invoke`
 
 
-## サンプル実装に関するセキュリティ上の注意
+## Security Notice for Sample Implementation
 
-本プロジェクトは**サンプル実装**のため、Lambda 関数内にデバッグ用のログ出力が含まれています。
+This project is a **sample implementation** and includes debug log output in the Lambda function.
 
 ```python
 print("event:", json.dumps(event))
 ```
 
-**本番環境で使用する場合は、以下の対応が必要です：**
+**For production use, the following actions are required:**
 
-1. **デバッグログの削除**: `cdk/lambda_python/index.py` 内の上記ログ出力を削除してください。API Gateway から渡される event オブジェクトには、`x-api-key` や `Authorization` ヘッダーなどの認証情報が含まれており、CloudWatch Logs に平文で記録されるリスクがあります。
+1. **Remove debug logs**: Delete the above log output in `cdk/lambda_python/index.py`. The event object passed from API Gateway contains authentication information such as `x-api-key` and `Authorization` headers, which poses a risk of being recorded in plaintext in CloudWatch Logs.
 
-2. **ログ出力が必要な場合**: 機密情報をフィルタリングしてからログ出力してください。
+2. **If logging is required**: Filter sensitive information before logging.
    ```python
-   # 悪い例: 認証情報が含まれる
+   # Bad example: Contains authentication info
    print("event:", json.dumps(event))
 
-   # 良い例: ヘッダーを除外
+   # Good example: Exclude headers
    safe_event = {k: v for k, v in event.items() if k != 'headers'}
    print("event:", json.dumps(safe_event))
    ```
 
-3. **CloudWatch Logs のアクセス制限**: IAM ポリシーで CloudWatch Logs へのアクセスを最小限に制限してください。
+3. **Restrict CloudWatch Logs access**: Limit access to CloudWatch Logs to minimum required using IAM policies.
 
-## 参考リンク
+## References
 
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [AWS DevOps Agent - MCP Server Configuration](https://docs.aws.amazon.com/devopsagent/latest/userguide/configuring-capabilities-for-aws-devops-agent-connecting-mcp-servers.html)
 - [awslabs/mcp-lambda-handler](https://github.com/awslabs/mcp)
 - [MCP Inspector](https://github.com/modelcontextprotocol/inspector)
 - [Amazon Cognito - Client Credentials Grant](https://docs.aws.amazon.com/cognito/latest/developerguide/token-endpoint.html)
-
